@@ -3,6 +3,7 @@
 
 #include "motordriver_4wd.h"
 #include "seeed_pwm.h"
+#include "rgb_lcd.h"
 
 /* 
  * PD7: Herc-CTR2A, PINM2F, output
@@ -51,6 +52,8 @@ void uart_putc(char c);
 int uart_putchar(char c, FILE *stream);
 int uart_getchar(FILE *stream);
 
+rgb_lcd lcd;
+
 
 int main(void)
 {
@@ -68,6 +71,9 @@ int main(void)
     setup(); // motorDriverDemo.ino's setup and loop, to refactor into here.
     
     uart_init(57600);
+    //sei();
+
+//    lcd.begin(16, 2);
 
     
     while (1) {
@@ -119,33 +125,32 @@ int main(void)
 	// perform action
 	MOTOR.setSpeedDir1(speed, dir1);
 	MOTOR.setSpeedDir2(speed, dir2);
-       
-       
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    for (;;) {
-//
-//		loop();
-//
-	MOTOR.setSpeedDir(80, DIRF);
-	_delay_ms(3000);
-	MOTOR.setSpeedDir(80, DIRR);
-	_delay_ms(3000);
-
-	if (serialEventRun) serialEventRun();
-    }
-    
-    
-    
     return 0;
 }
 
+    
+void kjasbg_setup(){
+    // set up the LCD's number of columns and rows:
+    // initialize the serial communications:
+    Serial.begin(9600);
+}
+
+void asdfas_loop()
+{
+    // when characters arrive over the serial port...
+    if (Serial.available()) 
+    {
+        // wait a bit for the entire message to arrive
+        delay(100);
+        // clear the screen
+        lcd.clear();
+        // read all the available characters
+        while (Serial.available() > 0) 
+        {
+            // display each character to the LCD
+            lcd.write(Serial.read());
+        }
+    }
+}

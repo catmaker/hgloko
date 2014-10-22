@@ -16,11 +16,11 @@ motordriver_4wd.o : motordriver_4wd.cpp
 	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -fno-exceptions  -o $@ -c motordriver_4wd.cpp
 
 seeed_pwm.o : seeed_pwm.cpp
-	@echo [93msrc/seeed_pwm.cpp[0m
+	@echo [93mseeed_pwm.cpp[0m
 	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -fno-exceptions  -o $@ -c seeed_pwm.cpp
 
 rgb_lcd.o : rgb_lcd.cpp rgb_lcd.h
-	@echo [93msrc/rgb_lcd.cpp[0m
+	@echo [93mrgb_lcd.cpp[0m
 	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 \
 	-I/usr/share/arduino/hardware/arduino/cores/arduino \
 	-ffunction-sections -fdata-sections -g -Os -w \
@@ -28,21 +28,55 @@ rgb_lcd.o : rgb_lcd.cpp rgb_lcd.h
 	-I/usr/share/arduino/hardware/arduino/cores/arduino \
 	-fno-exceptions	-o $@ -c rgb_lcd.cpp
 
-uart.o : uart.c
-	@echo [93msrc/uart.cpp[0m
+Wire.o : Wire.cpp Wire.h
+	@echo [93mWire.cpp[0m
 	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 \
 	-I/usr/share/arduino/hardware/arduino/cores/arduino \
 	-ffunction-sections -fdata-sections -g -Os -w \
 	-I/usr/share/arduino/hardware/arduino/variants/standard \
 	-I/usr/share/arduino/hardware/arduino/cores/arduino \
-	-fno-exceptions -o $@ -c uart.c
+	-fno-exceptions	-o $@ -c Wire.cpp
+
+
+# $< -- The name of the first prerequisite
+# $* -- The stem with which an implicit rule matches (see How Patterns Match).
+# If the target is dir/a.foo.b and the target pattern is a.%.b then the stem 
+# is dir/foo. The stem is useful for constructing names of related files.
+
+Print.o : Print.cpp Print.h
+	@echo [93m$*.cpp[0m
+	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 \
+	-I/usr/share/arduino/hardware/arduino/cores/arduino \
+	-ffunction-sections -fdata-sections -g -Os -w \
+	-I/usr/share/arduino/hardware/arduino/variants/standard \
+	-I/usr/share/arduino/hardware/arduino/cores/arduino \
+	-fno-exceptions	-o $@ -c $<
+
+twi.o : twi.cpp twi.h
+	@echo [93m$*.cpp[0m
+	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 \
+	-I/usr/share/arduino/hardware/arduino/cores/arduino \
+	-ffunction-sections -fdata-sections -g -Os -w \
+	-I/usr/share/arduino/hardware/arduino/variants/standard \
+	-I/usr/share/arduino/hardware/arduino/cores/arduino \
+	-fno-exceptions -o $@ -c $<
+
+uart.o : uart.c
+	@echo [93muart.cpp[0m
+	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 \
+	-I/usr/share/arduino/hardware/arduino/cores/arduino \
+	-ffunction-sections -fdata-sections -g -Os -w \
+	-I/usr/share/arduino/hardware/arduino/variants/standard \
+	-I/usr/share/arduino/hardware/arduino/cores/arduino \
+	-fno-exceptions -o $@ -c $<
 
 motorDriverDemo.o : motorDriverDemo.cpp
 	@echo [93mmotorDriverDemo.cpp[0m
 	avr-g++ -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=101 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -fno-exceptions -iquote src  -o $@ -c motorDriverDemo.cpp
 #include .build/pro5v328/src/motorDriverDemo.d
 
-firmware.elf : main.o motordriver_4wd.o seeed_pwm.o motorDriverDemo.o rgb_lcd.o uart.o
+firmware.elf : main.o motordriver_4wd.o seeed_pwm.o motorDriverDemo.o \
+               rgb_lcd.o uart.o twi.o Wire.o Print.o
 	@echo [92mLinking firmware.elf[0m
 	avr-gcc -mmcu=atmega328p -Wl,-Os -Wl,--gc-sections -o $@ $^
 
