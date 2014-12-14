@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>I am HgLoko</title>
+  <meta name="description" content="A robot with a web cam - beware :p">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .logo {
+      float: right;
+      width: 375px;
+      margin: 1.5em;
+    }
+    .vertical-control {
+      height: 240px;
+      -webkit-appearance: slider-vertical;
+    }
+    input[type="range"].horizontal-control {
+      width: 320px;
+      -webkit-appearance: slider-horizontal;
+      margin: 45px 0;
+    }
+    footer {
+    margin-bottom: 5em;
+    }
+    footer p {
+      margin-bottom: 0;
+    }
+  </style>
+  <!-- style.css from http://bootswatch.com/flatly/ -->
+</head>
+<body>
+<!--[if lt IE 9]> <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-lg-8">
+      <h1>I Am HgLoko</h1>
+      <p class="lead">camera on a robot</p>
+    </div>
+    <div class="col-lg-4">
+      <img src="hsg-banner.png" class="logo">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <h2>Ceiling view</h2>
+      <img src="http://localhost:8081/stream/video.mjpeg">
+    </div>
+    <div class="col-lg-5">
+      <h2>Front view</h2>
+      <div class="col-lg-2">
+        <input type="range" min="-50" max="50" step="1" id="up-down" class="vertical-control">
+      </div>
+      <div class="col-lg-10">
+        <img src="http://localhost:8082/stream/video.mjpeg">
+        <input type="range" min="-50" max="50" step="1" id="left-right" class="horizontal-control">
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <footer>
+    <div class="row">
+      <div class="col-lg-12">
+        <p>Made by Catmaker</p>
+        <p>Kai's Pi Port <a href="http://localhost">forwarding service</a></p>
+        <p><a href="http://localhost:8080">My I am hgLoko homepage</a></p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+var lr = document.getElementById('left-right') // left right control
+var ud = document.getElementById('up-down') // up down control
+
+lr.addEventListener('change', function() {
+  console.log('left-right: ' + this.value); // send this value back to server
+})
+
+ud.addEventListener('change', function() {
+  console.log('up-down: ' + this.value); // send this value back to server
+})
+</script>
+
+</body>
+</html>
