@@ -1,0 +1,171 @@
+<HEAD>
+<TITLE>I am HgChina</TITLE>
+    <style>
+      .logo {
+      float: right;
+      width: 375px;
+      margin: 1.5em;
+      }
+      .vertical-control {
+      height: 240px;
+      -webkit-appearance: slider-vertical;
+      }
+      .horizontal-control {
+      width: 310px;
+      -webkit-appearance: slider-horizontal;
+      margin: 45px 0;
+      }
+      footer {
+      margin-bottom: 5em;
+      }
+      footer p {
+      margin-bottom: 0;
+      }
+    </style>
+</HEAD>
+
+
+
+<BODY BGCOLOR="WHITE">
+<!-- <CENTER> -->
+<h1>
+    <img src="hsg-banner.png" alt="Smiley face" height="60" width="325">
+        <center>I Am HgChina</center>
+	</h1>
+	
+	<hr>
+	
+	<H2>What I see.</H2>
+	
+	
+	<table>
+	
+	<tr>
+	<th></th>
+	<th></th>
+	<th>Forward View</th>
+	<th>Ceiling View</th>
+	</tr>
+	
+	<tr>
+	<td>
+	<button type="button" id="vertical-reset">></button>
+	</td>
+	<td>
+	<input type="range" min="-50" max="50" step="1" id="up-down" class="vertical-control">
+	</td>
+	<td>
+	<img src="http://pi.dabase.com:9082/stream/video.mjpeg" alt="image">
+	</td>
+	<td>
+	<img src="http://pi.dabase.com:9081/stream/video.mjpeg" alt="image">
+	</td>
+	</tr>
+	
+	<tr>
+	<td></td>
+	<td>
+	<input type="checkbox" id="checkbox-lights">Lights</input>
+	</td>
+	<td>
+        <input type="range" min="-50" max="50" step="1" id="left-right" class="horizontal-control"></input>
+	</td>
+	</tr>
+
+	<tr>
+	<td></td>
+	<td></td>
+	<td>
+	<button type="button" id="horizontal-reset">^</button>
+	</td>
+	</tr>
+
+	</table>
+	
+	
+	
+	<hr>
+	
+	<h4>
+	By <i>catmaker</i> Last update 2014-12-13 12:34
+	</h4>
+	    
+	    <a href="http://pi.dabase.com">
+	    Kai's Pi Port forwarding service http://pi.dabase.com<br>
+	    </a>
+	    
+	    <a href="/">
+	    My I am HgChina homepage<br>
+	    </a>
+	    
+
+
+
+
+    <!--Using JQuery for button events-->
+    <script src="js/jquery.min.js"></script>
+    
+    <!--Socket.io library-->
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script>
+      var lr = document.getElementById('left-right') // left right control
+      var ud = document.getElementById('up-down') // up down control
+      var cbLights = document.getElementById('checkbox-lights') // lights control
+
+      
+      $(document).ready(function() {
+      // Connect to the node.js server. Change the IP address to the actual node server location.
+      var socket = io.connect('http://pi.dabase.com:9083');
+      
+      // When I've received 'robot connected' message from the socket.io server...
+      socket.on('robot connected', function (data) {
+      socket.emit('robot command', { command: 'nothing' });
+      console.log(data);
+      });
+      
+      // When the html buttons are clicked...
+      $('#vertical-reset').click(function() {
+      socket.emit('robot command', { command: 'vertical-reset' });
+      console.log('vertical-reset: ' + this.value);
+      });
+      
+      $('#horizontal-reset').click(function() {
+      socket.emit('robot command', { command: 'horizontal-reset' });
+      console.log('horizontal-reset: ' + this.value);
+      });
+      
+      function onVerticalSeek(){
+      socket.emit('robot command', { command: 'vert ' + ud.value });
+      console.log('up-down: ' + ud.value);
+      }
+      
+      ud.addEventListener('input', onVerticalSeek, false);
+      
+      function onHorizontalSeek(){
+      socket.emit('robot command', { command: 'horiz ' + lr.value });
+      console.log('left-right: ' + lr.value);
+      }
+      
+      lr.addEventListener('input', onHorizontalSeek, false);
+      
+      $('#checkbox-lights').change(function() {
+      if (cbLights.checked) {
+          socket.emit('robot command', { command: 'lights-on' });
+      }
+      else {
+          socket.emit('robot command', { command: 'lights-off' });
+      }      
+      console.log('lights: ' + this.value);
+      });
+      
+      
+      });
+    </script>
+    
+
+
+
+</body>
+	    
+	    
