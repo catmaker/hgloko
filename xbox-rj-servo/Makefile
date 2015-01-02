@@ -9,7 +9,7 @@ LDFLAGS=
 SOURCES=example2.c
 OBJECTS=$(SOURCES:.cpp=.o)
 #TARGETS=example1 example2 example3 example4 test-adc
-TARGETS=example2
+TARGETS=example1
 
 example1_objects= example1.o lib-juice.o
 example2_objects= example2.o lib-juice.o
